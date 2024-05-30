@@ -44,7 +44,7 @@ def build_sidebar_fiis():
             prices_fiis.columns = [tickers_fiis[0].rstrip(".SA")]
 
         prices_fiis.columns = prices_fiis.columns.str.rstrip(".SA")
-        prices_fiis['IFIX'] = yf.download("^IFIX", start=start_date_fii, end=end_date_fii)['Adj Close']
+        prices_fiis['IFIX'] = yf.download("IFIX", start=start_date_fii, end=end_date_fii)['Adj Close']
         return tickers_fiis, prices_fiis
     return None, None
 
@@ -101,7 +101,7 @@ def build_main(tickers, prices):
     # st.dataframe(prices)
 
 
-def build_main(tickers_fiis, prices_fiis):
+def build_main_fii(tickers_fiis, prices_fiis):
     weights_fii = np.ones(len(tickers_fiis))/len(tickers_fiis)
     prices_fiis['portfolio'] = prices_fiis.drop("IFIX", axis=1) @ weights_fii
     norm_prices_fii = 100 * prices_fiis / prices_fiis.iloc[0]
@@ -163,4 +163,4 @@ if tickers:
     build_main(tickers, prices)
 
 if tickers_fiis:
-    build_main(tickers_fiis, prices_fiis)
+    build_main_fii(tickers_fiis, prices_fiis)
