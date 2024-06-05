@@ -44,7 +44,7 @@ def build_sidebar_fiis():
             prices_fiis.columns = [tickers_fiis[0].rstrip(".SA")]
 
         prices_fiis.columns = prices_fiis.columns.str.rstrip(".SA")
-        prices_fiis['IFIX'] = yf.download("IFIX", start=start_date_fii, end=end_date_fii)['Adj Close']
+        prices_fiis['IFIX'] = yf.download("IFIX.SA", period="1d")['Adj Close']
         return tickers_fiis, prices_fiis
     return None, None
 
@@ -103,7 +103,7 @@ def build_main(tickers, prices):
 
 def build_main_fii(tickers_fiis, prices_fiis):
     weights_fii = np.ones(len(tickers_fiis))/len(tickers_fiis)
-    prices_fiis['portfolio'] = prices_fiis.drop("IFIX", axis=1) @ weights_fii
+    prices_fiis['portfolio FIIs'] = prices_fiis.drop("IFIX", axis=1) @ weights_fii
     norm_prices_fii = 100 * prices_fiis / prices_fiis.iloc[0]
     returns_fii = prices_fiis.pct_change()[1:]
     vols_fii = returns_fii.std()*np.sqrt(252)
@@ -114,8 +114,8 @@ def build_main_fii(tickers_fiis, prices_fiis):
         c = mygrid_fii.container(border=True)
         c.subheader(t, divider="red")
         colA, colB, colC = c.columns(3)
-        if t == "portfolio":
-            colA.image("images/logo.png", width=85)
+        if t == "portfolio FIIs":
+            colA.image("images/fiilogo.png", width=85)
         elif t == "IFIX":
             colA.image("images/fiilogo.png", width=85)
             
@@ -158,7 +158,7 @@ with st.sidebar:
     tickers, prices = build_sidebar()
     tickers_fiis, prices_fiis = build_sidebar_fiis()
 
-st.title('Ações Dashboard')
+st.title('Ações e FIIs Dashboard')
 if tickers:
     build_main(tickers, prices)
 
