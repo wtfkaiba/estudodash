@@ -19,13 +19,14 @@ def build_sidebar():
     end_date = st.date_input("Até", format="DD/MM/YYYY", value="today", key="acoesend")
 
     if tickers:
-        prices = yf.download(tickers, start=start_date, end=end_date)["Adj Close"]
+        #prices = yf.download(tickers, start=start_date, end=end_date)["Adj Close"]
+        prices = yf.download(tickers, start=start_date, end=end_date)['Close']
         if len(tickers) ==1:
             prices = prices.to_frame()
             prices.columns = [tickers[0].rstrip(".SA")]
 
         prices.columns = prices.columns.str.rstrip(".SA")
-        prices['IBOV'] = yf.download("^BVSP", start=start_date, end=end_date)['Adj Close']
+        prices['IBOV'] = yf.download("^BVSP", start=start_date, end=end_date)['Close']
         return tickers, prices
     return None, None
 
@@ -38,13 +39,13 @@ def build_sidebar_fiis():
     end_date_fii = st.date_input("Até", format="DD/MM/YYYY", value="today", key="fiisend")
 
     if tickers_fiis:
-        prices_fiis = yf.download(tickers_fiis, start=start_date_fii, end=end_date_fii)["Adj Close"]
+        prices_fiis = yf.download(tickers_fiis, start=start_date_fii, end=end_date_fii)['Close']
         if len(tickers_fiis) ==1:
             prices_fiis = prices_fiis.to_frame()
             prices_fiis.columns = [tickers_fiis[0].rstrip(".SA")]
 
         prices_fiis.columns = prices_fiis.columns.str.rstrip(".SA")
-        prices_fiis['IFIX'] = yf.download("IFIX.SA", period="1d")['Adj Close']
+        prices_fiis['IFIX'] = yf.download("IFIX.SA", period="1d")['Close']
         return tickers_fiis, prices_fiis
     return None, None
 
